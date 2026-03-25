@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #2d2d2d;
+  color: #e0e0e0;
+  overflow: hidden;
+}
+
+/* Devil mode: darker palette + blood-red editorial accents. */
+.app-shell[data-agent-mode='devil'] {
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(145, 25, 25, 0.18), transparent 46%),
+    radial-gradient(95% 120% at 0% 100%, rgba(83, 15, 15, 0.2), transparent 56%),
+    #121214;
+  color: #ebe6e3;
+}
+
+.app-shell[data-agent-mode='devil'] .reader-right-panel {
+  position: relative;
+  border-left-color: rgba(184, 52, 52, 0.32);
+  background: linear-gradient(180deg, rgba(20, 20, 23, 0.97), rgba(16, 16, 18, 0.98));
+  box-shadow: inset 1px 0 0 rgba(185, 64, 64, 0.14);
+}
+
+.app-shell[data-agent-mode='devil'] .reader-right-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 122, 122, 0.84), rgba(129, 18, 18, 0.7));
+}
+
+.app-shell[data-agent-mode='devil'] .reader-right-panel-header {
+  border-bottom-color: rgba(169, 46, 46, 0.35);
+  background: rgba(24, 24, 27, 0.92);
+}
+
+.app-shell[data-agent-mode='devil'] .mode-switch {
+  border-color: rgba(170, 60, 60, 0.4);
+  background: rgba(27, 21, 23, 0.76);
+}
+
+.app-shell[data-agent-mode='devil'] .mode-switch .mode-switch-active {
+  background: linear-gradient(180deg, rgba(114, 30, 30, 0.95), rgba(72, 18, 18, 0.95));
+  color: #ffe8e8;
+}
+
+.app-shell[data-agent-mode='devil'] .devil-empty-tip {
+  color: rgba(206, 177, 177, 0.8);
+}
+
+.app-shell[data-agent-mode='devil'] .insight-card,
+.app-shell[data-agent-mode='devil'] .user-insight-card {
+  border-color: rgba(148, 61, 61, 0.45);
+  background: linear-gradient(180deg, rgba(29, 25, 27, 0.86), rgba(22, 21, 24, 0.92));
+}
+
+.app-shell[data-agent-mode='devil'] .insight-card:hover,
+.app-shell[data-agent-mode='devil'] .user-insight-card:hover {
+  border-color: rgba(203, 85, 85, 0.66);
+  background: linear-gradient(180deg, rgba(42, 30, 33, 0.9), rgba(30, 23, 26, 0.95));
+}
+
+.app-shell[data-agent-mode='devil'] .insight-card .insight-quote,
+.app-shell[data-agent-mode='devil'] .user-insight-card .insight-quote {
+  border-left-color: rgba(214, 82, 82, 0.74);
+  color: rgba(221, 196, 196, 0.82);
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * pdf.js text layer: stacked above canvas + highlight overlays; receives pointer for selection.
+ * Do not override inner span styles — TextLayer sets transforms/fonts.
+ */
+.pdf-page-inner > .pdf-text-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  pointer-events: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  z-index: 30;
+  line-height: 1;
+}
+
+.pdf-page-inner > .pdf-text-layer ::selection {
+  background: rgba(155, 35, 29, 0.32);
+}
+
+/* Match pdf.js .textLayer: invisible glyphs over canvas (selection only). */
+.pdf-page-inner > .pdf-text-layer :is(span, br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
