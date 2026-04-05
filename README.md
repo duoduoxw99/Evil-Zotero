@@ -1,12 +1,20 @@
-## Zotero Agent
+# Zotero Agent
 
-An experimental interface for reading academic papers with AI.
-Read papers like an angel. Or like a devil.
+> An experimental interface for reading academic papers with AI.
+
+## Read like an angel — or like a devil.
+
+Most tools help you *understand* a paper.  
+Zotero Agent helps you *interpret* it.
 
 Every paper says something.  
 Some papers also *mean* something.
 
-Zotero Agent helps you read both.
+Zotero Agent lets you read both.
+
+---
+
+## 🧠 How it works
 
 By selecting passages directly from a PDF, you can generate insights that reveal:
 
@@ -23,19 +31,22 @@ it’s about perspective.
 
 ## Demo
 
-This repository currently contains a web-based prototype of a "virtual Zotero" interface.
+This repository contains a web-based prototype of a **"virtual Zotero" interface**.
 
-To try the core interaction:
+### Try it:
 
-1. Open the app
-2. Double-click the first paper in the library
-3. Select any text in the PDF
-4. Generate insights in the right-side agent panel
+1. Open the app  
+2. Double-click the first paper in the library  
+3. Select any text in the PDF  
+4. Generate insights in the right-side agent panel  
 
-The prototype focuses on:
-- selection-driven insights
-- Angel / Devil reading modes
-- linked highlights and cards
+### Current capabilities:
+
+- selection-driven insights  
+- Angel / Devil reading modes  
+- linked highlights and cards  
+
+---
 
 ## Roadmap
 
