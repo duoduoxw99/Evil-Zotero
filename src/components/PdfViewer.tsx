@@ -113,6 +113,7 @@ function SavedSelectionHighlightGroup({
         style={btnStyle}
         className="flex h-5 w-5 pointer-events-auto items-center justify-center rounded border border-zotero-border bg-zotero-surface text-[11px] leading-none text-zotero-muted shadow hover:border-red-500/50 hover:bg-red-500/15 hover:text-red-200"
         onMouseDown={(e) => e.preventDefault()}
+        onMouseUp={(e) => e.stopPropagation()}
         onClick={(e) => {
           e.stopPropagation()
           onRemove()
@@ -379,7 +380,12 @@ export function PdfViewer({
   const pages = numPages > 0 ? Array.from({ length: numPages }, (_, i) => i + 1) : []
 
   useEffect(() => {
-    const onMouseUp = () => {
+    const onMouseUp = (e: MouseEvent) => {
+      const target = e.target
+      if (!(target instanceof Node) || !scrollRef.current?.contains(target)) {
+        return
+      }
+
       const sel = window.getSelection()
       if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
         return
@@ -402,11 +408,15 @@ export function PdfViewer({
       const rects = rangeToLocalClientRects(range, wrap)
       if (rects.length === 0) return
 
-      onSelectionIntentRef.current({
-        quote: text,
-        page: pageNum,
-        rects,
-      })
+      try {
+        onSelectionIntentRef.current({
+          quote: text,
+          page: pageNum,
+          rects,
+        })
+      } finally {
+        sel.removeAllRanges()
+      }
     }
 
     document.addEventListener('mouseup', onMouseUp)

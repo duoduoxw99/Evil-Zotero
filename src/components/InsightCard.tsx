@@ -88,7 +88,7 @@ export function InsightCard({
           <p className="invisible text-xs">{angelText.length > devilText.length ? angelText : devilText}</p>
         </div>
       </button>
-      <blockquote className="insight-quote mt-1 border-l-2 border-zotero-border pl-1.5 text-xs italic text-zotero-muted">
+      <blockquote className="insight-quote mt-1 line-clamp-3 border-l-2 border-zotero-border pl-1.5 text-xs italic leading-snug text-zotero-muted">
         &ldquo;{item.quote}&rdquo;
       </blockquote>
       <div className="mt-1 flex items-center gap-2">

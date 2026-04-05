@@ -1,44 +1,80 @@
 # Zotero Agent — Research Library Prototype
 
-Frontend-only prototype that mimics a Zotero-like research library UI for validating a future AI research reading tool.
+Zotero-like research library UI with PDF reading, highlights, and AI-assisted insights.
+
+## Architecture
+
+- **Frontend** (React + Vite): calls same-origin `/api/*` only. No OpenAI keys in the browser or in the client bundle.
+- **Backend** (`server/`): small Express API that holds `OPENAI_API_KEY` in environment variables and proxies requests to OpenAI.
+
+Safe to push the repo to GitHub: copy `.env.example` → `.env`, add your key locally, and never commit `.env`.
 
 ## Tech Stack
 
-- React 18 + Vite
-- TypeScript
-- Tailwind CSS
-- No backend, database, or auth
+- React 18 + Vite + TypeScript + Tailwind
+- Express + `tsx` for the API
+- pdf.js for in-browser PDF rendering
 
-## Run
+## Run locally
 
-```bash
-npm install
-npm run dev
-```
+1. Install dependencies:
 
-Then open http://localhost:5173
+   ```bash
+   npm install
+   ```
 
-## Build
+2. Create `.env` in the project root (see `.env.example`):
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Set `OPENAI_API_KEY` to your key.
+
+3. Start **API + web** together:
+
+   ```bash
+   npm run dev
+   ```
+
+   - App: http://localhost:5173  
+   - API: http://localhost:8787 (Vite proxies `/api` to this port)
+
+4. Optional: frontend only (AI features will error until the API is running):
+
+   ```bash
+   npm run dev:client-only
+   ```
+
+## Build & preview
 
 ```bash
 npm run build
+npm run start:api
+```
+
+In a second terminal:
+
+```bash
 npm run preview
 ```
 
+`vite preview` proxies `/api` to `127.0.0.1:8787` (same as dev). Keep the API running.
+
+## Deploying publicly
+
+- **Frontend** (e.g. static host): build with `VITE_API_BASE_URL=https://your-api.example.com` so the browser calls your deployed API.
+- **Backend**: run `server/index.ts` (e.g. Node + `tsx` or compile to JS) on a host that sets `OPENAI_API_KEY`. Restrict CORS with `AI_ALLOWED_ORIGINS` (comma-separated origins).
+
+For production, add authentication and rate limiting in front of `/api/ai/*` so the endpoint is not open to the world.
+
 ## Features
 
-- **Library view**: Dark Zotero-style shell with sidebar (libraries/collections), paper table, right toolbar, tag panel, and a draggable "Spicy" button (bottom-right by default).
-- **Spicy mode**: Click the floating button to open a bottom panel (placeholder chat + module cards). Click again to close. Button is draggable; position is kept for the session.
-- **Reader view**: Double-click a paper to open. Left: **real PDF rendering (pdf.js)** with scrolling, per-page text extraction, quote→page matching, and approximate highlight overlays. Use **Open PDF…** to load a local file, or put files under `public/pdfs/` to match each paper’s `pdfPath` (e.g. `/pdfs/paper-1.pdf`). Right: insight cards; click/hover still drive scroll + highlight using matched quote text when possible, otherwise fallback to the card’s page number.
+- **Library view**: Dark Zotero-style shell with sidebar, paper table, tags, draggable “Spicy” button.
+- **Reader view**: PDF via pdf.js, text selection → insight cards, global analysis, local persistence for saved cards.
+- **Open PDF…** or place files under `public/pdfs/` to match each paper’s `pdfPath`.
 
-## Mock Data
+## Component structure
 
-- 10 preloaded papers in `src/data/mockPapers.ts`.
-- Each has `id`, `title`, `creator`, `date`, `publication`, `collection`, `tags`, `pdfPath`, and `insights` (citation-linked interpretations).
-
-## Component Structure
-
-- `AppShell` — layout and global state
-- `TopMenuBar`, `TabBar`, `SidebarCollections`, `PaperTable`, `RightToolbar`, `TagPanel`
-- `FloatingSpicyButton`, `BottomSpicyPanel`
-- `ReaderLayout`, `PdfViewer`, `ReaderRightPanel`, `InsightPanel`, `InsightCard`
+- `AppShell`, `ReaderLayout`, `PdfViewer`, `ReaderRightPanel`, `InsightPanel`, etc.
+- AI: `src/services/*` → `src/provider/openaiProvider.ts` (HTTP to `/api`) → `server/openai.ts` (OpenAI).

@@ -1,6 +1,25 @@
 import type { UserSelectionInsight } from '@/types'
 import { UserInsightCard } from './UserInsightCard'
 
+function SaveAllIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  )
+}
+
+function ClearAllIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <line x1="10" y1="11" x2="10" y2="17" strokeLinecap="round" />
+      <line x1="14" y1="11" x2="14" y2="17" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 interface ReaderRightPanelProps {
   agentOpen: boolean
   mode: 'angel' | 'devil'
@@ -44,7 +63,7 @@ export function ReaderRightPanel({
 
   const hasGlobalCard = userInsights.some((c) => c.cardType === 'global')
   const globalLoading = userInsights.some((c) => c.cardType === 'global' && c.status === 'loading')
-  const analyzeDisabled = hasGlobalCard || globalLoading
+  const analyzeDisabled = globalLoading
 
   const showMainEmpty =
     userInsights.length === 0 && !globalLoading
@@ -52,26 +71,25 @@ export function ReaderRightPanel({
   return (
     <aside className="reader-right-panel flex h-full min-h-0 w-[360px] shrink-0 flex-col overflow-hidden border-l border-zotero-border bg-zotero-surface">
       <div className="reader-right-panel-header shrink-0 border-b border-zotero-border bg-zotero-surface px-3 py-2">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <div className="text-xs font-medium text-zotero-muted">阅读助手</div>
-          <div className="flex shrink-0 items-center gap-1">
-            <button
-              type="button"
-              onClick={onSaveAllInsights}
-              className="rounded border border-zotero-border/80 px-1.5 py-0.5 text-[10px] text-zotero-muted hover:bg-zotero-border/40 hover:text-zotero-text"
-              title="Save all cards"
-            >
-              Save all
-            </button>
-            <button
-              type="button"
-              onClick={onClearAllInsights}
-              className="rounded border border-zotero-border/80 px-1.5 py-0.5 text-[10px] text-zotero-muted hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-200"
-              title="Clear all cards and highlights"
-            >
-              Clear all
-            </button>
-          </div>
+        <div className="mb-2 flex items-center justify-end gap-1.5">
+          <button
+            type="button"
+            onClick={onSaveAllInsights}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zotero-border/80 text-zotero-muted transition-colors hover:border-teal-500/35 hover:bg-teal-500/10 hover:text-zotero-text"
+            title="Save all cards"
+            aria-label="Save all cards"
+          >
+            <SaveAllIcon />
+          </button>
+          <button
+            type="button"
+            onClick={onClearAllInsights}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zotero-border/80 text-zotero-muted transition-colors hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-200"
+            title="Clear all cards and highlights"
+            aria-label="Clear all cards and highlights"
+          >
+            <ClearAllIcon />
+          </button>
         </div>
 
         <button
@@ -80,7 +98,7 @@ export function ReaderRightPanel({
           onClick={onAnalyzePaper}
           className="mb-2 w-full rounded border border-teal-600/45 bg-teal-500/10 px-2 py-1.5 text-center text-[11px] font-medium text-zotero-text transition-colors hover:bg-teal-500/18 disabled:cursor-not-allowed disabled:opacity-45"
         >
-          Analyze Paper
+          Global analysis
         </button>
 
         {!hasGlobalCard && (

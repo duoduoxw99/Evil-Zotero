@@ -126,7 +126,7 @@ export function UserInsightCard({
       </div>
 
       <blockquote
-        className={`insight-quote mb-2 border-l-2 pl-1.5 text-xs italic text-zotero-muted ${
+        className={`insight-quote mb-2 line-clamp-3 border-l-2 pl-1.5 text-xs italic leading-snug text-zotero-muted ${
           isGlobal ? 'border-violet-500/50' : 'border-teal-600/50'
         }`}
       >
@@ -134,8 +134,7 @@ export function UserInsightCard({
           <span className="not-italic text-zotero-muted">正在生成全文概要…</span>
         ) : (
           <>
-            &ldquo;{insight.quote.slice(0, 500)}
-            {insight.quote.length > 500 ? '…' : ''}&rdquo;
+            &ldquo;{insight.quote}&rdquo;
           </>
         )}
       </blockquote>

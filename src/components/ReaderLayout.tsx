@@ -41,6 +41,7 @@ export function ReaderLayout({ paper, onClose, spicyOpen, mode, onModeChange }: 
   const [highlightFocusTick, setHighlightFocusTick] = useState(0)
 
   const userInsightsRef = useRef(userInsights)
+  const globalAnalyzeInFlightRef = useRef(false)
   useEffect(() => {
     userInsightsRef.current = userInsights
   }, [userInsights])
@@ -135,7 +136,8 @@ export function ReaderLayout({ paper, onClose, spicyOpen, mode, onModeChange }: 
   }, [paper.id])
 
   const handleAnalyzePaper = useCallback(async () => {
-    if (userInsightsRef.current.some((c) => c.cardType === 'global')) return
+    if (globalAnalyzeInFlightRef.current) return
+    globalAnalyzeInFlightRef.current = true
 
     const id = newGlobalInsightId()
     const loadingInsight: UserSelectionInsight = {
@@ -149,16 +151,17 @@ export function ReaderLayout({ paper, onClose, spicyOpen, mode, onModeChange }: 
       label: 'Global Insight',
     }
 
-    setUserInsights((prev) => {
-      if (prev.some((c) => c.cardType === 'global')) return prev
-      return sortInsightsForDisplay([loadingInsight, ...prev])
-    })
+    const prev = userInsightsRef.current
+    const withoutGlobal = prev.filter((c) => c.cardType !== 'global')
+    const next = sortInsightsForDisplay([loadingInsight, ...withoutGlobal])
+    persistSavedSubset(next)
+    setUserInsights(next)
     setActiveHighlightId(null)
 
     try {
       const result = await analyzeWholePaper(paper)
-      setUserInsights((prev) =>
-        prev.map((u) =>
+      setUserInsights((p) =>
+        p.map((u) =>
           u.id === id
             ? {
                 ...u,
@@ -172,8 +175,8 @@ export function ReaderLayout({ paper, onClose, spicyOpen, mode, onModeChange }: 
         ),
       )
     } catch (e) {
-      setUserInsights((prev) =>
-        prev.map((u) =>
+      setUserInsights((p) =>
+        p.map((u) =>
           u.id === id
             ? {
                 ...u,
@@ -183,8 +186,10 @@ export function ReaderLayout({ paper, onClose, spicyOpen, mode, onModeChange }: 
             : u,
         ),
       )
+    } finally {
+      globalAnalyzeInFlightRef.current = false
     }
-  }, [paper])
+  }, [paper, persistSavedSubset])
 
   const handleSelectionIntent = useCallback(
     async (payload: {
