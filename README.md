@@ -1,6 +1,53 @@
-# Zotero Agent — Research Library Prototype
+## Zotero Agent
 
-Zotero-like research library UI with PDF reading, highlights, and AI-assisted insights.
+An experimental interface for reading academic papers with AI.
+Read papers like an angel. Or like a devil.
+
+Every paper says something.  
+Some papers also *mean* something.
+
+Zotero Agent helps you read both.
+
+By selecting passages directly from a PDF, you can generate insights that reveal:
+
+- what the author claims  
+- and what they might be quietly pushing against  
+
+Switch between:
+
+😇 Angel — "what can be safely defended"  
+😈 Devil — "what can be intelligently inferred"
+
+Because good reading isn’t just about clarity —  
+it’s about perspective.
+
+## Demo
+
+This repository currently contains a web-based prototype of a "virtual Zotero" interface.
+
+To try the core interaction:
+
+1. Open the app
+2. Double-click the first paper in the library
+3. Select any text in the PDF
+4. Generate insights in the right-side agent panel
+
+The prototype focuses on:
+- selection-driven insights
+- Angel / Devil reading modes
+- linked highlights and cards
+
+## Roadmap
+
+This is an early prototype.
+
+Next steps:
+- Zotero plugin integration
+- persistent research workspace
+- improved PDF interaction and annotation
+- multi-paper reasoning
+
+The goal is to turn this into a real research tool — not just a demo.
 
 ## Architecture
 
