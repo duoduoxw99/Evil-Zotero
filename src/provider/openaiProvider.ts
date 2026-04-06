@@ -11,11 +11,26 @@ function apiBase(): string {
 
 async function postJson<T>(path: string, body: unknown): Promise<T> {
   const url = `${apiBase()}${path}`
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
+  let res: Response
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    const netFail =
+      e instanceof TypeError ||
+      /failed to fetch|fetch failed|networkerror|load failed/i.test(msg)
+    if (netFail) {
+      throw new Error(
+        `无法连接本地 API（${msg}）。请确认已执行 npm run dev（同时启动页面与 8787 端口服务），且未单独只运行 dev:web。若在预览/生产环境，请正确设置 VITE_API_BASE_URL。`,
+      )
+    }
+    throw e
+  }
   const data: unknown = await res.json().catch(() => ({}))
   if (!res.ok) {
     const err = data as { error?: string }
