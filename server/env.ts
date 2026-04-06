@@ -52,7 +52,7 @@ if (socks) {
     console.log(
       `[zotero-agent-api] Outbound proxy: HTTPS_PROXY / HTTP_PROXY (${connectTimeout}ms connect timeout).`,
     )
-  } else {
+  } else if (process.env.VERCEL !== '1') {
     console.warn(
       `[zotero-agent-api] No HTTPS_PROXY or SOCKS5_PROXY in .env — using direct connection. If you see "Connect Timeout" to api.openai.com, open Clash/V2Ray and set one of:\n` +
         `  HTTPS_PROXY=http://127.0.0.1:7890   (mixed/HTTP port — check your app)\n` +

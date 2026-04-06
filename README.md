@@ -121,10 +121,20 @@ npm run preview
 
 ## Deploying publicly
 
-- **Frontend** (e.g. static host): build with `VITE_API_BASE_URL=https://your-api.example.com` so the browser calls your deployed API.
-- **Backend**: run `server/index.ts` (e.g. Node + `tsx` or compile to JS) on a host that sets `OPENAI_API_KEY`. Restrict CORS with `AI_ALLOWED_ORIGINS` (comma-separated origins).
+### Vercel (推荐)
 
-For production, add authentication and rate limiting in front of `/api/ai/*` so the endpoint is not open to the world.
+- 连接 GitHub 仓库后 **Import** 项目；Vercel 识别 `vercel.json`（Vite + `api/` Serverless）。
+- 在 **Settings → Environment Variables** 配置 `OPENAI_API_KEY`（及可选的 `OPENAI_BASE_URL`、`OPENAI_PROJECT`、`HTTPS_PROXY` 等，与 `.env.example` 一致）。
+- **不要**为生产前端设置 `VITE_API_BASE_URL`：保持同源，浏览器请求 `/api/...` 由 Vercel Functions 处理，避免 API 404。
+- 部署后自检：`GET https://<your-app>.vercel.app/api/health` → `{"ok":true}`；`GET .../api/health/openai` 检测上游密钥（脱敏错误）。
+- 本地模拟生产：`npx vercel dev`（`package.json` 中 `npm run dev:vercel`）。
+
+### 其他静态托管 + 自建 API
+
+- **Frontend**: 若 API 与站点不同域，构建时使用 `VITE_API_BASE_URL=https://your-api.example.com`。
+- **Backend**: 自行运行 `server/index.ts`（Node + `tsx`），设置 `OPENAI_API_KEY`，并用 `AI_ALLOWED_ORIGINS` 限制 CORS。
+
+生产环境建议在 `/api/ai/*` 前增加鉴权与更强的限流。
 
 ## Features
 
@@ -135,4 +145,4 @@ For production, add authentication and rate limiting in front of `/api/ai/*` so 
 ## Component structure
 
 - `AppShell`, `ReaderLayout`, `PdfViewer`, `ReaderRightPanel`, `InsightPanel`, etc.
-- AI: `src/services/*` → `src/provider/openaiProvider.ts` (HTTP to `/api`) → `server/openai.ts` (OpenAI).
+- AI: `src/services/*` → `src/provider/openaiProvider.ts` (HTTP to `/api`) → `server/openai.ts` (OpenAI)。Vercel 上由 `api/**` Serverless 调用同一套 `server/openai.ts`。

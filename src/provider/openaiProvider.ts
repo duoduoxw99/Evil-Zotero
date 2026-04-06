@@ -26,7 +26,7 @@ async function postJson<T>(path: string, body: unknown): Promise<T> {
       /failed to fetch|fetch failed|networkerror|load failed/i.test(msg)
     if (netFail) {
       throw new Error(
-        `无法连接本地 API（${msg}）。请确认已执行 npm run dev（同时启动页面与 8787 端口服务），且未单独只运行 dev:web。若在预览/生产环境，请正确设置 VITE_API_BASE_URL。`,
+        `无法连接 API（${msg}）。本地请执行 npm run dev（Express 8787 + Vite）或 vercel dev；Vercel 部署请保持 VITE_API_BASE_URL 为空（同源 /api）或指向你的生产 API 根地址。`,
       )
     }
     throw e
