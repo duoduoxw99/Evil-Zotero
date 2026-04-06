@@ -99,7 +99,3 @@ The goal is to turn this into a real research tool — not just a demo.
    ```
 
 
-## Component structure
-
-- `AppShell`, `ReaderLayout`, `PdfViewer`, `ReaderRightPanel`, `InsightPanel`, etc.
-- AI: `src/services/*` → `src/provider/openaiProvider.ts` (HTTP to `/api`) → `server/openai.ts` (OpenAI)。Vercel 上由 `api/**` Serverless 调用同一套 `server/openai.ts`。
