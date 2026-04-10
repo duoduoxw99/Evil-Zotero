@@ -12,7 +12,8 @@ Some papers also *mean* something.
 
 Zotero Agent lets you read both.
 
-![Screenshot](./assets/screenshot.png)
+![Screenshot](.assets/screenshpt.png)
+
 ---
 
 ## 🧠 How it works
