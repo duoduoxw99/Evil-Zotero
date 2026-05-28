@@ -87,17 +87,4 @@ The goal is to turn this into a real research tool — not just a demo.
 
 3. Start **API + web** together:
 
-   ```bash
-   npm run dev
-   ```
-
-   - App: http://localhost:5173  
-   - API: http://localhost:8787 (Vite proxies `/api` to this port)
-
-4. Optional: frontend only (AI features will error until the API is running):
-
-   ```bash
-   npm run dev:client-only
-   ```
-
 
